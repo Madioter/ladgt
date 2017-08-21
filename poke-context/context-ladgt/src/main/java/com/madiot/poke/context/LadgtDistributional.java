@@ -6,7 +6,7 @@
  * @date 2017/8/18
  * @version
  */
-package com.madiot.poke.ladgt.play.round;
+package com.madiot.poke.context;
 
 import com.madiot.poke.api.play.IDistributional;
 import com.madiot.poke.ladgt.rule.config.LadgtConstants;

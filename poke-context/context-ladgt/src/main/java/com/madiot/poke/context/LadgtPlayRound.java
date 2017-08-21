@@ -6,15 +6,15 @@
  * @date 2017/8/18
  * @version
  */
-package com.madiot.poke.ladgt.play.round;
+package com.madiot.poke.context;
 
 import com.madiot.poke.api.play.IDistributional;
-import com.madiot.poke.api.play.IPlayRound;
 import com.madiot.poke.api.rule.IPokeCard;
+import com.madiot.poke.context.api.IPlayRound;
 import com.madiot.poke.ladgt.play.observer.LadgtPlayObserver;
 import com.madiot.poke.ladgt.rule.pool.LadgtDeckPoke;
 import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
-import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardPool;
+import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +28,12 @@ import java.util.List;
 public class LadgtPlayRound implements IPlayRound {
 
     private final List<LadgtPlayObserver> observers;
-    private LadgtPokeCardPool ladgtPokeCardPool;
+    private LadgtPokeCardFactory ladgtPokeCardFactory;
     private LadgtOneHand lastHand;
     private IPokeCard taggedCard = LadgtDeckPoke.TAGGED_EIGHT;
 
-    public LadgtPlayRound(LadgtPokeCardPool ladgtPokeCardPool, List<LadgtPlayObserver> observers) {
-        this.ladgtPokeCardPool = ladgtPokeCardPool;
+    public LadgtPlayRound(LadgtPokeCardFactory ladgtPokeCardFactory, List<LadgtPlayObserver> observers) {
+        this.ladgtPokeCardFactory = ladgtPokeCardFactory;
         this.observers = observers;
     }
 
@@ -47,7 +47,7 @@ public class LadgtPlayRound implements IPlayRound {
 
     public void start() {
         IDistributional distributional = new LadgtDistributional();
-        ladgtPokeCardPool.distributional(distributional);
+        ladgtPokeCardFactory.distributional(distributional);
         int i;
         for (i = 0; i < observers.size(); i++) {
             observers.get(i).deal(distributional.getNextList(i));

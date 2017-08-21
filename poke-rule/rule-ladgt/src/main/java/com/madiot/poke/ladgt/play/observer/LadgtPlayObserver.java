@@ -15,7 +15,7 @@ import com.madiot.poke.api.rule.IOneHand;
 import com.madiot.poke.api.rule.IPokeCard;
 import com.madiot.poke.errors.PokeContainsException;
 import com.madiot.poke.ladgt.rule.pool.LadgtDeckPoke;
-import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardPool;
+import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardFactory;
 import com.madioter.poker.common.future.CallbackFuture;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -37,14 +37,14 @@ public class LadgtPlayObserver implements IPlayObserver {
 
     private final List<IPlayListener> playListeners;
 
-    private final LadgtPokeCardPool ladgtPokeCardPool;
+    private final LadgtPokeCardFactory ladgtPokeCardFactory;
 
     private boolean haveTaggedCard = false;
 
     private CallbackFuture<INoticeMessage> callbackFuture;
 
-    public LadgtPlayObserver(List<IPlayListener> playListeners, LadgtPokeCardPool ladgtPokeCardPool) {
-        this.ladgtPokeCardPool = ladgtPokeCardPool;
+    public LadgtPlayObserver(List<IPlayListener> playListeners, LadgtPokeCardFactory ladgtPokeCardFactory) {
+        this.ladgtPokeCardFactory = ladgtPokeCardFactory;
         if (CollectionUtils.isNotEmpty(playListeners)) {
             Collections.sort(playListeners, new Comparator<IPlayListener>() {
                 @Override
@@ -109,8 +109,8 @@ public class LadgtPlayObserver implements IPlayObserver {
         pokeCards.removeAll(oneHand.getCards());
     }
 
-    public LadgtPokeCardPool getLadgtPokeCardPool() {
-        return ladgtPokeCardPool;
+    public LadgtPokeCardFactory getLadgtPokeCardFactory() {
+        return ladgtPokeCardFactory;
     }
 
     public boolean isHaveTaggedCard() {

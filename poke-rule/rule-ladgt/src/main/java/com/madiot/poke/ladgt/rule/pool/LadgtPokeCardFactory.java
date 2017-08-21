@@ -21,12 +21,12 @@ import java.util.List;
  * @author Yi.Wang2
  * @date 2017/8/17
  */
-public class LadgtPokeCardPool implements IPokeCardFactory {
+public class LadgtPokeCardFactory implements IPokeCardFactory {
 
     private final List<LadgtPokeCard> deckPoke;
     private final LadgtConfiguration configuration;
 
-    public LadgtPokeCardPool(LadgtConfiguration configuration) {
+    public LadgtPokeCardFactory(LadgtConfiguration configuration) {
         this.configuration = configuration;
         this.deckPoke = new ArrayList<>();
         this.deckPoke.addAll(new LadgtDeckPoke(true));

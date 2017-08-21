@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.madioter</groupId>
-    <artifactId>liuan-doudizhu</artifactId>
+    <artifactId>ladgt</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
@@ -16,6 +16,8 @@
         <module>dubbo-api</module>
         <module>poke-rule</module>
         <module>poke-process</module>
+        <module>poke-context</module>
+        <module>poke-codec</module>
     </modules>
 
     <properties>

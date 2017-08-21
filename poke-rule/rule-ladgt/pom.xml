@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>poke-ladgt</artifactId>
+    <artifactId>rule-ladgt</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.madioter</groupId>
-            <artifactId>poke-rule-api</artifactId>
+            <artifactId>rule-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

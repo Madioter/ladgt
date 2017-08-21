@@ -9,9 +9,8 @@
 package com.madiot.poke.ladgt.play.round;
 
 import com.madiot.poke.api.play.IPlayHandler;
-import com.madiot.poke.errors.ComparatorException;
 import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
-import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardPool;
+import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardFactory;
 
 /**
  * @ClassName: PokeTypeHandler
@@ -23,9 +22,9 @@ public class LadgtPokeTypeHandler implements IPlayHandler {
 
     private LadgtOneHand oneHand;
 
-    private LadgtPokeCardPool pokeCardPool;
+    private LadgtPokeCardFactory pokeCardPool;
 
-    public LadgtPokeTypeHandler(LadgtOneHand oneHand, LadgtPokeCardPool pokeCardPool) {
+    public LadgtPokeTypeHandler(LadgtOneHand oneHand, LadgtPokeCardFactory pokeCardPool) {
         this.oneHand = oneHand;
         this.pokeCardPool = pokeCardPool;
     }

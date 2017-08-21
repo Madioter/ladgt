@@ -6,7 +6,7 @@
  * @date 2017/8/18
  * @version
  */
-package com.madiot.poke.api.play;
+package com.madiot.poke.api;
 
 /**
  * @ClassName: IPlayRoundProcess

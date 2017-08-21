@@ -6,7 +6,7 @@
  * @date 2017/8/17
  * @version
  */
-package com.madiot.poke.ladgt.rule.config;
+package com.madiot.poke.context.config;
 
 import com.madiot.poke.ladgt.rule.comparator.LadgtComparator;
 import com.madiot.poke.api.rule.IPokeTypeComparator;
@@ -22,6 +22,7 @@ import com.madiot.poke.ladgt.rule.poketype.LadgtPokeTypeRegistry;
 public class LadgtConfiguration {
 
     private IPokeTypeRegistry pokeTypeRegistry = new LadgtPokeTypeRegistry();
+
     private IPokeTypeComparator ladgtComparator = new LadgtComparator();
 
     public IPokeTypeRegistry getPokeTypeRegistry() {

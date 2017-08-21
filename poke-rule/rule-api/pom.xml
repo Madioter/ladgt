@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>poke-rule-api</artifactId>
+    <artifactId>rule-api</artifactId>
 
 
 </project>
