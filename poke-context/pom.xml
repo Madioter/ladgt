@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>context</artifactId>
+    <artifactId>poke-context</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>context-api</module>
