@@ -21,4 +21,6 @@ public interface IPlayRound {
     <T extends IPlayObserver> List<T> getPlayers();
 
     void end();
+
+    void deal();
 }

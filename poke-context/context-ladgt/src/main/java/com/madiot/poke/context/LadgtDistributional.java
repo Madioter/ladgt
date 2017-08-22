@@ -8,7 +8,7 @@
  */
 package com.madiot.poke.context;
 
-import com.madiot.poke.api.play.IDistributional;
+import com.madiot.poke.context.api.IDistributional;
 import com.madiot.poke.ladgt.rule.config.LadgtConstants;
 import com.madiot.poke.ladgt.rule.pool.LadgtPokeCard;
 
@@ -24,13 +24,17 @@ import java.util.Random;
  */
 public class LadgtDistributional implements IDistributional<LadgtPokeCard> {
 
-    List<Integer> usedIndex = new ArrayList();
+    private List<Integer> usedIndex = new ArrayList();
 
-    Random random = new Random();
+    private Random random = new Random();
 
-    List<List<LadgtPokeCard>> playerCardList = new ArrayList<>();
+    private List<List<LadgtPokeCard>> playerCardList = new ArrayList<>();
 
-    List<LadgtPokeCard> lastCardList = new ArrayList<>();
+    private List<LadgtPokeCard> lastCardList = new ArrayList<>();
+
+    private int landlordIndex;
+
+    private LadgtPokeCard landlordCard;
 
     @Override
     public void addCard(LadgtPokeCard pokeCard) {
@@ -42,7 +46,7 @@ public class LadgtDistributional implements IDistributional<LadgtPokeCard> {
     }
 
     @Override
-    public Integer getNextIndex() {
+    public Integer getNextIndex(int total) {
         Integer randomIndex = random.nextInt(LadgtConstants.MAX_CARDS);
         while (usedIndex.contains(randomIndex)) {
             randomIndex++;
@@ -60,5 +64,24 @@ public class LadgtDistributional implements IDistributional<LadgtPokeCard> {
         } else {
             return lastCardList;
         }
+    }
+
+    @Override
+    public int landlordIndex(int total) {
+        return random.nextInt(total);
+    }
+
+    @Override
+    public void setLandLord(LadgtPokeCard pokeCard) {
+        this.landlordIndex = playerCardList.size() - 1;
+        this.landlordCard = pokeCard;
+    }
+
+    public LadgtPokeCard getLandlordCard() {
+        return landlordCard;
+    }
+
+    public int getLandlordIndex() {
+        return landlordIndex;
     }
 }

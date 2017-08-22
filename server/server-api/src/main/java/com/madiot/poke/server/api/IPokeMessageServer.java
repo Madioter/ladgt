@@ -8,6 +8,10 @@
  */
 package com.madiot.poke.server.api;
 
+import com.madiot.poke.codec.message.NoticeMessage;
+
+import java.util.concurrent.Future;
+
 /**
  * @ClassName: IServer
  * @Description: TODO
@@ -16,5 +20,5 @@ package com.madiot.poke.server.api;
  */
 public interface IPokeMessageServer {
 
-    void sendMessage(ICallbackService callbackService);
+    Future<NoticeMessage> sendMessage(byte[] message);
 }

@@ -8,9 +8,9 @@
  */
 package com.madiot.poke.ladgt.rule.pool;
 
-import com.madiot.poke.api.play.IDistributional;
 import com.madiot.poke.api.rule.IPokeCardFactory;
-import com.madiot.poke.ladgt.rule.config.LadgtConfiguration;
+import com.madiot.poke.context.api.IDistributional;
+import com.madiot.poke.context.config.IConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,9 @@ import java.util.List;
 public class LadgtPokeCardFactory implements IPokeCardFactory {
 
     private final List<LadgtPokeCard> deckPoke;
-    private final LadgtConfiguration configuration;
+    private final IConfiguration configuration;
 
-    public LadgtPokeCardFactory(LadgtConfiguration configuration) {
+    public LadgtPokeCardFactory(IConfiguration configuration) {
         this.configuration = configuration;
         this.deckPoke = new ArrayList<>();
         this.deckPoke.addAll(new LadgtDeckPoke(true));
@@ -35,8 +35,17 @@ public class LadgtPokeCardFactory implements IPokeCardFactory {
     }
 
     public void distributional(IDistributional distributional) {
-        while (distributional.getNextIndex() != null) {
-            distributional.addCard(deckPoke.get(distributional.getNextIndex()));
+        int landlordIndex = distributional.landlordIndex(deckPoke.size());
+        while (deckPoke.get(landlordIndex).getType() == LadgtPokeCard.CardType.TAGGED) {
+            landlordIndex = distributional.landlordIndex(deckPoke.size());
+        }
+        Integer nextIndex = distributional.getNextIndex(deckPoke.size());
+        while (nextIndex != null) {
+            if (landlordIndex == nextIndex) {
+                distributional.setLandLord(deckPoke.get(nextIndex));
+            }
+            distributional.addCard(deckPoke.get(nextIndex));
+            nextIndex = distributional.getNextIndex(deckPoke.size());
         }
     }
 }

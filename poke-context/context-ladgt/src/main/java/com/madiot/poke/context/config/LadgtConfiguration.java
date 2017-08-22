@@ -8,10 +8,17 @@
  */
 package com.madiot.poke.context.config;
 
-import com.madiot.poke.ladgt.rule.comparator.LadgtComparator;
+import com.madiot.poke.api.rule.IPokeCardFactory;
 import com.madiot.poke.api.rule.IPokeTypeComparator;
 import com.madiot.poke.api.rule.IPokeTypeRegistry;
+import com.madiot.poke.codec.api.INoticeDataFactory;
+import com.madiot.poke.codec.ladgt.LadgtNoticeDataFactory;
+import com.madiot.poke.ladgt.rule.comparator.LadgtComparator;
 import com.madiot.poke.ladgt.rule.poketype.LadgtPokeTypeRegistry;
+import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
+import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardFactory;
+import com.madiot.poke.server.api.IPokeMessageServer;
+import com.madioter.common.spring.SpringContextUtils;
 
 /**
  * @ClassName: Configuration
@@ -19,25 +26,46 @@ import com.madiot.poke.ladgt.rule.poketype.LadgtPokeTypeRegistry;
  * @author Yi.Wang2
  * @date 2017/8/17
  */
-public class LadgtConfiguration {
+public class LadgtConfiguration implements IConfiguration<LadgtOneHand> {
 
     private IPokeTypeRegistry pokeTypeRegistry = new LadgtPokeTypeRegistry();
 
-    private IPokeTypeComparator ladgtComparator = new LadgtComparator();
+    private IPokeTypeComparator<LadgtOneHand> comparator = new LadgtComparator();
+
+    private IPokeCardFactory pokeCardFactory = new LadgtPokeCardFactory(this);
+
+    private INoticeDataFactory noticeDataFactory = new LadgtNoticeDataFactory();
+
+    private IPokeMessageServer pokeMessageServer = SpringContextUtils.getBeanByClass(IPokeMessageServer.class);
 
     public IPokeTypeRegistry getPokeTypeRegistry() {
         return pokeTypeRegistry;
+    }
+
+    @Override
+    public IPokeTypeComparator<LadgtOneHand> getComparator() {
+        return comparator;
     }
 
     public void setPokeTypeRegistry(IPokeTypeRegistry pokeTypeRegistry) {
         this.pokeTypeRegistry = pokeTypeRegistry;
     }
 
-    public IPokeTypeComparator getLadgtComparator() {
-        return ladgtComparator;
+    public void setComparator(IPokeTypeComparator<LadgtOneHand> comparator) {
+        this.comparator = comparator;
     }
 
-    public void setLadgtComparator(IPokeTypeComparator ladgtComparator) {
-        this.ladgtComparator = ladgtComparator;
+    @Override
+    public IPokeCardFactory getPokeCardFactory() {
+        return pokeCardFactory;
+    }
+
+    @Override
+    public INoticeDataFactory getNoticeDataFactory() {
+        return noticeDataFactory;
+    }
+
+    public IPokeMessageServer getPokeMessageServer() {
+        return pokeMessageServer;
     }
 }

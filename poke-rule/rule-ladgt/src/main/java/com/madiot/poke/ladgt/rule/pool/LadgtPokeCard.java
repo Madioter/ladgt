@@ -85,4 +85,18 @@ public class LadgtPokeCard implements IPokeCard {
             return null;
         }
     }
+
+    public int getIndex() {
+        return this.cardType.ordinal() * CardValue.values().length
+                + this.cardValue.ordinal();
+    }
+
+    public static LadgtPokeCard getInstance(int index) {
+        return new LadgtPokeCard(CardType.values()[index / CardValue.values().length],
+                CardValue.values()[index % CardValue.values().length]);
+    }
+
+    public static void main(String[] args) {
+
+    }
 }

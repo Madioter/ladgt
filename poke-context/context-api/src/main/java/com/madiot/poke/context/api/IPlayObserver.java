@@ -10,6 +10,7 @@ package com.madiot.poke.context.api;
 
 import com.madiot.poke.api.rule.IOneHand;
 import com.madiot.poke.api.rule.IPokeCard;
+import com.madiot.poke.codec.message.NoticeMessage;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -20,7 +21,7 @@ import java.util.concurrent.Future;
  * @author Yi.Wang2
  * @date 2017/8/18
  */
-public interface IPlayObserver {
+public interface IPlayObserver<T extends IPokeCard> {
 
     void notice(IOneHand oneHand);
 
@@ -28,8 +29,13 @@ public interface IPlayObserver {
 
     void pass();
 
-    void deal(List<IPokeCard> pokeCards);
+    void deal(List<T> pokeCards, T landlordCard);
 
-    //Future<INoticeMessage> ready();
+    void sendDealMessage();
 
+    Future<NoticeMessage> sendCallHelperMessage();
+
+    void setHelperRole(int pokeCardIndex);
+
+    boolean checkCallHelper(int pokeCardIndex);
 }

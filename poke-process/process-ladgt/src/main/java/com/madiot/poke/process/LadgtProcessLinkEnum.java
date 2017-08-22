@@ -6,5 +6,5 @@ import com.madiot.poke.api.IProcessDef;
  * Created by julian on 2017/8/19.
  */
 public enum LadgtProcessLinkEnum implements IProcessDef {
-    READY, DEAL, CALL_LANDLORD, PLAY, END;
+    DEAL, CALL_HELPER, PLAY, SCORE;
 }

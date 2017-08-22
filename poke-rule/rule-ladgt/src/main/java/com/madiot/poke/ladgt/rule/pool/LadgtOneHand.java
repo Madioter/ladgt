@@ -11,8 +11,8 @@ package com.madiot.poke.ladgt.rule.pool;
 import com.madiot.poke.api.rule.IOneHand;
 import com.madiot.poke.api.rule.IPokeCard;
 import com.madiot.poke.api.rule.IPokeTypeRule;
+import com.madiot.poke.context.config.IConfiguration;
 import com.madiot.poke.errors.PokeRuleException;
-import com.madiot.poke.ladgt.rule.config.LadgtConfiguration;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ public class LadgtOneHand implements Comparable<LadgtOneHand>, IOneHand<LadgtPok
 
     private final List<LadgtPokeCard> cards;
 
-    private LadgtConfiguration configuration;
+    private IConfiguration configuration;
 
-    public LadgtOneHand(List<LadgtPokeCard> cards, LadgtConfiguration configuration) {
+    public LadgtOneHand(List<LadgtPokeCard> cards, IConfiguration configuration) {
         this.cards = cards;
         this.configuration = configuration;
         IPokeTypeRule rule = configuration.getPokeTypeRegistry().getType(this);
@@ -44,7 +44,7 @@ public class LadgtOneHand implements Comparable<LadgtOneHand>, IOneHand<LadgtPok
 
     @Override
     public int compareTo(LadgtOneHand source) {
-        return configuration.getLadgtComparator().compareWith(this, source);
+        return configuration.getComparator().compareWith(this, source);
     }
 
 
@@ -68,7 +68,7 @@ public class LadgtOneHand implements Comparable<LadgtOneHand>, IOneHand<LadgtPok
         return maxCardValue;
     }
 
-    public LadgtConfiguration getConfiguration() {
+    public IConfiguration getConfiguration() {
         return configuration;
     }
 }

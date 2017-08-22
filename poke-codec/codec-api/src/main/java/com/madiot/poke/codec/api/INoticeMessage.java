@@ -11,7 +11,7 @@ public interface INoticeMessage extends IDecodeAble, IEncodeAble {
 
     Date getTimestamp();
 
-    INoticeType getType();
+    ICommandType getType();
 
     INoticeData getData();
 

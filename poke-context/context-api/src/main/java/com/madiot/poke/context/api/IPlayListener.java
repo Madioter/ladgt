@@ -6,9 +6,10 @@
  * @date 2017/8/18
  * @version
  */
-package com.madiot.poke.api.play;
+package com.madiot.poke.context.api;
 
 import com.madiot.poke.api.rule.IOneHand;
+import com.madiot.poke.context.api.IPlayObserver;
 
 /**
  * @ClassName: IPlayListener

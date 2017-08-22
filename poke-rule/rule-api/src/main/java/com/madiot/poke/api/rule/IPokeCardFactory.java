@@ -8,7 +8,7 @@
  */
 package com.madiot.poke.api.rule;
 
-import com.madiot.poke.api.play.IDistributional;
+import com.madiot.poke.context.api.IDistributional;
 
 /**
  * @ClassName: IPokeCardPool

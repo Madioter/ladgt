@@ -9,7 +9,6 @@ public interface IProcessLink {
 
     IProcessDef getProcessType();
 
-    IProcessDef doProcess(IPlayRound playRound);
+    void doProcess(IPlayRound playRound);
 
-    void timeoutProcess(IPlayRound playRound);
 }

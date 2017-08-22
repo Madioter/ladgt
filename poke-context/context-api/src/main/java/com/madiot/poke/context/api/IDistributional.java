@@ -6,7 +6,7 @@
  * @date 2017/8/18
  * @version
  */
-package com.madiot.poke.api.play;
+package com.madiot.poke.context.api;
 
 /**
  * @ClassName: IDistributional
@@ -23,7 +23,15 @@ public interface IDistributional<T extends IPokeCard> {
 
     void addCard(T pokeCard);
 
-    Integer getNextIndex();
+    Integer getNextIndex(int total);
 
-    public List<T> getNextList(int index);
+    List<T> getNextList(int index);
+
+    int landlordIndex(int total);
+
+    void setLandLord(T pokeCard);
+
+    public T getLandlordCard();
+
+    public int getLandlordIndex();
 }

@@ -1,6 +1,12 @@
 package com.madiot.poke.codec.message;
 
-import com.madiot.poke.codec.api.*;
+import com.madiot.poke.codec.api.ICommandFactory;
+import com.madiot.poke.codec.api.ICommandType;
+import com.madiot.poke.codec.api.IDecodeAble;
+import com.madiot.poke.codec.api.IEncodeAble;
+import com.madiot.poke.codec.api.INoticeResult;
+import com.madiot.poke.codec.api.IResultFactory;
+import com.madiot.poke.codec.common.IndexCreator;
 import com.madiot.poke.codec.exception.CodecException;
 import com.madioter.common.spring.SpringContextUtils;
 import com.madioter.common.utils.bytes.ByteBuffer;
@@ -11,8 +17,8 @@ import java.util.Date;
 
 /**
  * Created by julian on 2017/8/19.
- * Head construct 'MADIOT'(5 bytes) + timestamp(8 bytes) + index(8 bytes) + commandType(1 byte) + result(1 byte) + data Length(4 bytes)
- * total 27 bytes
+ * Head construct 'MADIOT'(5 bytes) + timestamp(8 bytes) + index(8 bytes) + userId(4 bytes) + commandType(1 byte) + result(1 byte) + data Length(4 bytes)
+ * total 31 bytes
  */
 public class NoticeHead implements IEncodeAble, IDecodeAble {
 
@@ -22,15 +28,27 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
 
     private static final byte[] START_TAG = "MADIOT".getBytes();
 
-    private Date timestamp;
+    private Date timestamp = new Date();
 
-    private Long index;
+    private Long index = IndexCreator.getIndex();
+
+    private Integer userId;
 
     private ICommandType commandType;
 
     private INoticeResult result;
 
     private Integer dataLength;
+
+    public NoticeHead(Integer userId, ICommandType commandType, INoticeResult result) {
+        this.userId = userId;
+        this.commandType = commandType;
+        this.result = result;
+    }
+
+    public NoticeHead() {
+
+    }
 
     @Override
     public void decode(ByteBuffer buffer) {
@@ -39,6 +57,7 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
         }
         this.timestamp = new Date(ByteUtils.bytesToLong(buffer.read(8)));
         this.index = ByteUtils.bytesToLong(buffer.read(8));
+        this.userId = ByteUtils.bytesToInt(buffer.read(4));
         this.commandType = commandFactory.getCommandType(buffer.readInt());
         this.result = resultFactory.getResult(buffer.readInt());
         this.dataLength = ByteUtils.bytesToInt(buffer.read(4));
@@ -52,11 +71,12 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
     @Override
     public void encode(ByteBuffer buffer) {
         buffer.write(START_TAG);
-        buffer.write(ByteUtils.longToBytes(this.timestamp.getTime(),8));
-        buffer.write(ByteUtils.longToBytes(this.index,8));
+        buffer.write(ByteUtils.longToBytes(this.timestamp.getTime(), 8));
+        buffer.write(ByteUtils.longToBytes(this.index, 8));
+        buffer.write(ByteUtils.intToBytes(this.userId, 4));
         buffer.write(this.commandType.getBytes());
         buffer.write(this.result.getBytes());
-        buffer.write(ByteUtils.intToBytes(this.dataLength,4));
+        buffer.write(ByteUtils.intToBytes(this.dataLength, 4));
     }
 
     public Date getTimestamp() {
@@ -97,5 +117,13 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
 
     public void setDataLength(Integer dataLength) {
         this.dataLength = dataLength;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

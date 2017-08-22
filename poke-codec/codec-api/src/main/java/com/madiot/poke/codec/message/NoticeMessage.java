@@ -1,10 +1,13 @@
 package com.madiot.poke.codec.message;
 
-import com.madiot.poke.codec.api.*;
+import com.madiot.poke.codec.api.ICommandType;
+import com.madiot.poke.codec.api.INoticeData;
+import com.madiot.poke.codec.api.INoticeDataFactory;
+import com.madiot.poke.codec.api.INoticeMessage;
+import com.madiot.poke.codec.api.INoticeResult;
 import com.madiot.poke.codec.exception.CodecException;
 import com.madioter.common.spring.SpringContextUtils;
 import com.madioter.common.utils.bytes.ByteBuffer;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -16,17 +19,22 @@ public class NoticeMessage implements INoticeMessage {
 
     private static INoticeDataFactory noticeDataFactory = SpringContextUtils.getBeanByClass(INoticeDataFactory.class);
 
-    private NoticeHead noticeHead = new NoticeHead();
+    private NoticeHead noticeHead;
 
     private INoticeData noticeData;
 
     private byte checkCode;
 
     public NoticeMessage() {
+        noticeHead = new NoticeHead();
+    }
 
+    public NoticeMessage(Integer userId, ICommandType commandType, INoticeResult result) {
+        noticeHead = new NoticeHead(userId, commandType, result);
     }
 
     public NoticeMessage(byte[] data) {
+        noticeHead = new NoticeHead();
         ByteBuffer buffer = new ByteBuffer(data);
         decode(buffer);
     }
@@ -67,24 +75,23 @@ public class NoticeMessage implements INoticeMessage {
 
     @Override
     public Long getId() {
-        return null;
+        return getNoticeHead().getIndex();
     }
 
     @Override
     public Date getTimestamp() {
-        return null;
+        return getNoticeHead().getTimestamp();
     }
 
     @Override
-    public INoticeType getType() {
-        return null;
+    public ICommandType getType() {
+        return getNoticeHead().getCommandType();
     }
 
     @Override
     public INoticeData getData() {
-        return null;
+        return noticeData;
     }
-
 
     public static byte getBCC(byte[] data) {
         byte BCC = 0x00;
@@ -92,5 +99,13 @@ public class NoticeMessage implements INoticeMessage {
             BCC = (byte) (BCC ^ data[i]);
         }
         return BCC;
+    }
+
+    public void setNoticeData(INoticeData noticeData) {
+        this.noticeData = noticeData;
+    }
+
+    public NoticeHead getNoticeHead() {
+        return noticeHead;
     }
 }
