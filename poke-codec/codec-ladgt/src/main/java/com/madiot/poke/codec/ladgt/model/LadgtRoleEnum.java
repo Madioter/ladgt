@@ -8,13 +8,15 @@
  */
 package com.madiot.poke.codec.ladgt.model;
 
+import com.madiot.poke.codec.common.IRoleEnum;
+
 /**
  * @ClassName: LadgtRoleEnum
  * @Description: TODO
  * @author Yi.Wang2
  * @date 2017/8/21
  */
-public enum LadgtRoleEnum {
+public enum LadgtRoleEnum implements IRoleEnum {
     LAND_LORD(1), FARMER(2), HELPER(3), LAND_LORD_WITH_HELPER(4);
 
 

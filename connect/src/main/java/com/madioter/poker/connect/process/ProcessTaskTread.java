@@ -1,12 +1,14 @@
 package com.madioter.poker.connect.process;
 
-import com.madioter.common.utils.bytes.ByteUtils;
-import com.madioter.poker.common.exception.ConnectionException;
+import com.madiot.poke.dubbo.api.server.IProcessService;
+import com.madiot.common.spring.SpringContextUtils;
+import com.madiot.common.utils.bytes.ByteUtils;
 import com.madioter.poker.connect.retry.RetrySendMessageTask;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +23,12 @@ public class ProcessTaskTread extends Thread {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessTaskTread.class);
 
+    private static final IProcessService processService = SpringContextUtils.getBeanByClass(IProcessService.class);
+
     /**
      * 任务
      */
-    private IProcess process;
+    private byte[] message;
 
     /**
      * tcp通道
@@ -34,25 +38,19 @@ public class ProcessTaskTread extends Thread {
     /**
      * 构造方法
      *
-     * @param process process
+     * @param message message
      * @param channel channel
      */
-    public ProcessTaskTread(IProcess process, Channel channel) {
-        this.process = process;
+    public ProcessTaskTread(byte[] message, Channel channel) {
+        this.message = message;
         this.channel = channel;
     }
 
     @Override
     public void run() {
-        final byte[] response;
-        try {
-            response = process.doProcess();
-        } catch (ConnectionException e) {
-            LOGGER.error(e.getMessage(), e);
-            return;
-        }
+        final byte[] response = processService.receiptMessage(message);
 
-        if (response != null) {
+        if (!ArrayUtils.isEmpty(response)) {
             LOGGER.debug("send response to tbox: {}", ByteUtils.bytesToHexString(response));
             if (channel.isWritable()) {
                 ChannelFuture future = channel.writeAndFlush(response);

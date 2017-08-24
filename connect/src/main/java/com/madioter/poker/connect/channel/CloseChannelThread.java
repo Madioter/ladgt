@@ -1,9 +1,9 @@
 package com.madioter.poker.connect.channel;
 
-import com.igdata.api.gb.IGBVehicleStatusChange;
-import com.igdata.common.spring.SpringContextUtils;
-import com.igdata.gb.connect.connection.ConnectionManager;
-import com.igdata.gb.connect.dto.GBChannelInfo;
+import com.madiot.poke.dubbo.api.server.IPlayerStatusChange;
+import com.madiot.common.spring.SpringContextUtils;
+import com.madioter.poker.connect.connection.ConnectionManager;
+import com.madioter.poker.connect.dto.ChannelInfo;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,21 +35,21 @@ public class CloseChannelThread extends Thread {
         InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
         String remoteIp = insocket.getAddress().getHostAddress() + ":" + insocket.getPort();
 
-        GBChannelInfo channelInfo= ConnectionManager.getInstance().release(remoteIp);
-        if(channelInfo!=null){
-            try{
-                String vin=channelInfo.getVin();
-                SpringContextUtils.getBeanByClass(IGBVehicleStatusChange.class).vhlOffLine(vin, remoteIp);
-            }catch (NullPointerException e){
+        ChannelInfo channelInfo = ConnectionManager.getInstance().release(remoteIp);
+        if (channelInfo != null) {
+            try {
+                Integer playerId = channelInfo.getPlayerId();
+                SpringContextUtils.getBeanByClass(IPlayerStatusChange.class).offLine(playerId, remoteIp);
+            } catch (NullPointerException e) {
                 LOGGER.error("服务提供者不存在，需要先添加服务提供者", e);
             }
 
         }
 
         String ip = insocket.getAddress().getHostAddress();
-        if(ip.startsWith("10.")||ip.startsWith("100.")){
+        if (ip.startsWith("10.") || ip.startsWith("100.")) {
 
-        }else{
+        } else {
             LOGGER.info("关闭远程TCP连接：remoteIp: {}", remoteIp);
         }
         this.channel.close();

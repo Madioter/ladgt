@@ -12,7 +12,6 @@
         <module>connect</module>
         <module>server</module>
         <module>common</module>
-        <module>domain</module>
         <module>dubbo-api</module>
         <module>poke-rule</module>
         <module>poke-process</module>

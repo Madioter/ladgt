@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false">
+
+    <!-- POOL配置 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.jedisPoolConfig.maxActive}"/>
+        <property name="maxIdle" value="${redis.jedisPoolConfig.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.jedisPoolConfig.maxWait}"/>
+        <property name="testOnBorrow" value="${redis.jedisPoolConfig.testOnBorrow}"/>
+    </bean>
+
+    <!--redis 集群配置-->
+    <bean id="jedisCluster" class="com.madiot.common.redis.component.JedisClusterFactory">
+        <property name="addressConfig">
+            <value>classpath:config.properties</value>
+        </property>
+        <property name="addressKeyPrefix" value="redisCluster.hostAndport"/>
+        <property name="timeout" value="300000"/>
+        <property name="maxRedirections" value="6"/>
+        <property name="jedisPoolConfig" ref="jedisPoolConfig"/>
+    </bean>
+
+    <!--以下为单机版redis配置对应 可注释，如若加上必须添加单机版的redisIP和端口 ，主要是预留给本地测试使用单机版redis-->
+    <!--jedis shard信息配置-->
+    <bean id="jedis.shardInfoCache1" class="redis.clients.jedis.JedisShardInfo">
+        <constructor-arg index="0" value="${redis.jedis.shardInfoCache.host}"/>
+        <constructor-arg index="1" type="int" value="${redis.jedis.shardInfoCache.port}"/>
+    </bean>
+
+    <!--jedis shard pool配置-->
+    <bean id="shardedJedisPoolCache" class="redis.clients.jedis.ShardedJedisPool">
+        <constructor-arg index="0" ref="jedisPoolConfig"/>
+        <constructor-arg index="1">
+            <list>
+                <ref bean="jedis.shardInfoCache1"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--本地redis配置使用com.igdata.cache.RedisCacheLocal；集群配置使用com.igdata.cache.RedisCache-->
+    <bean id="redisCache" class="com.igdata.common.redis.component.RedisCache"></bean>
+
+    <context:component-scan base-package="com.madiot.common.redis.service"/>
+</beans>

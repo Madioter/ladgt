@@ -10,7 +10,7 @@ package com.madiot.poke.codec.ladgt;
 
 import com.madiot.poke.codec.api.ICommandFactory;
 import com.madiot.poke.codec.api.ICommandType;
-import com.madioter.common.utils.bytes.ByteUtils;
+import com.madiot.common.utils.bytes.ByteUtils;
 
 /**
  * @ClassName: NoticeDataTypeException
@@ -20,9 +20,16 @@ import com.madioter.common.utils.bytes.ByteUtils;
  */
 public enum LadgtCommandTypeEnum implements ICommandType, ICommandFactory {
 
-    LOGIN(1, "登录"), READY(2, "准备"), DEAL(3, "发牌"), CALL_HELPER(4, "叫帮手"),
-    NOTICE_HELPER(5, "通知帮手"), DISCARD(6, "出牌"), PASS(7, "过牌"),
-    NOTICE_DISCARD(8, "通知出牌"), NOTICE_SCORE(9, "结算");
+    /**
+     * 下行消息
+     */
+    DEAL(11, "发牌"), CALL_HELPER(12, "叫帮手"), NOTICE_HELPER(13, "通知帮手"), DISCARD(14, "出牌"),
+    NOTICE_DISCARD(15, "通知出牌"), NOTICE_SCORE(16, "结算"), NOTICE_SPEAK(17, "发送发言"),
+
+    /**
+     * 上行消息
+     */
+    LOGIN(21, "登录"), READY(22, "准备"), CURRENT_STATE(23, "获取当前状态"), SPEAK(24, "发言");
 
     private String name;
 

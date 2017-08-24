@@ -1,11 +1,9 @@
 package com.madioter.poker.connect.netty;
 
-import com.madioter.common.spring.SpringContextUtils;
-import com.madioter.common.utils.bytes.ByteUtils;
+import com.madiot.common.spring.SpringContextUtils;
+import com.madiot.common.utils.bytes.ByteUtils;
 import com.madioter.poker.connect.channel.CloseChannelThread;
 import com.madioter.poker.connect.channel.OpenChannelThread;
-import com.madioter.poker.connect.process.IProcess;
-import com.madioter.poker.connect.process.ProcessFactory;
 import com.madioter.poker.connect.process.ProcessTaskTread;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -69,14 +67,11 @@ public class ServiceDispatcher extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         LOGGER.debug("收到客户端{}发送至服务器端{}的心跳信息！{}", new String[]{remoteIp, serverIp, ByteUtils.bytesToHexString((byte[]) msg)});
 
-        IProcess process = ProcessFactory.dispatcher((byte[]) msg, ctx);
-        if (process != null) {
-            try {
-                taskExecutor.execute(new ProcessTaskTread(process, ctx.channel()));
-            } catch (RejectedExecutionException e) {
-                LOGGER.debug("当前连接数过多，断开后重试");
-                ctx.close();
-            }
+        try {
+            taskExecutor.execute(new ProcessTaskTread((byte[]) msg, ctx.channel()));
+        } catch (RejectedExecutionException e) {
+            LOGGER.debug("当前连接数过多，断开后重试");
+            ctx.close();
         }
     }
 

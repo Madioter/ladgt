@@ -32,8 +32,11 @@ public class LadgtOneHand implements Comparable<LadgtOneHand>, IOneHand<LadgtPok
 
     private IConfiguration configuration;
 
-    public LadgtOneHand(List<LadgtPokeCard> cards, IConfiguration configuration) {
+    private int playerId;
+
+    public LadgtOneHand(List<LadgtPokeCard> cards, IConfiguration configuration, int playerId) {
         this.cards = cards;
+        this.playerId = playerId;
         this.configuration = configuration;
         IPokeTypeRule rule = configuration.getPokeTypeRegistry().getType(this);
         if (rule == null) {
@@ -64,6 +67,11 @@ public class LadgtOneHand implements Comparable<LadgtOneHand>, IOneHand<LadgtPok
         return pokeType;
     }
 
+    @Override
+    public int getPlayerId() {
+        return this.playerId;
+    }
+
     public LadgtPokeCard.CardValue getMaxCardValue() {
         return maxCardValue;
     }
@@ -71,4 +79,6 @@ public class LadgtOneHand implements Comparable<LadgtOneHand>, IOneHand<LadgtPok
     public IConfiguration getConfiguration() {
         return configuration;
     }
+
+
 }

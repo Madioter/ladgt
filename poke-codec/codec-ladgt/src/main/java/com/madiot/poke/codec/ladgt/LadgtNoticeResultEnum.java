@@ -9,7 +9,7 @@
 package com.madiot.poke.codec.ladgt;
 
 import com.madiot.poke.codec.api.INoticeResult;
-import com.madioter.common.utils.bytes.ByteUtils;
+import com.madiot.common.utils.bytes.ByteUtils;
 
 /**
  * @ClassName: LadgtNoticeResult

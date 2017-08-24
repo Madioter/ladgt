@@ -11,6 +11,7 @@ package com.madiot.poke.context.api;
 import com.madiot.poke.api.rule.IOneHand;
 import com.madiot.poke.api.rule.IPokeCard;
 import com.madiot.poke.codec.message.NoticeMessage;
+import com.madioter.poker.common.future.CallbackFuture;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -25,17 +26,30 @@ public interface IPlayObserver<T extends IPokeCard> {
 
     void notice(IOneHand oneHand);
 
-    void play(IOneHand oneHand);
+    CallbackFuture<NoticeMessage> discard(IOneHand lastOneHand);
 
     void pass();
 
+    IPlayer getPlayer();
+
     void deal(List<T> pokeCards, T landlordCard);
 
-    void sendDealMessage();
+    void sendDealMessage(IPlayer landlordPlayer);
 
-    Future<NoticeMessage> sendCallHelperMessage();
+    CallbackFuture<NoticeMessage> sendCallHelperMessage();
 
     void setHelperRole(int pokeCardIndex);
 
     boolean checkCallHelper(int pokeCardIndex);
+
+    /**
+     * 获取默认牌
+     */
+    IOneHand defaultDiscard();
+
+    void removeDiscard(IOneHand oneHand);
+
+    List<T> getCards(List<Integer> cards);
+
+    boolean isEnd();
 }

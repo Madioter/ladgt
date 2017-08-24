@@ -8,7 +8,7 @@
  */
 package com.madioter.poker.connect.netty;
 
-import com.madioter.common.utils.config.ConfigUtil;
+import com.madiot.common.utils.config.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

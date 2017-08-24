@@ -1,6 +1,6 @@
 package com.madioter.poker.connect.retry;
 
-import com.igdata.common.utils.bytes.ByteUtils;
+import com.madiot.common.utils.bytes.ByteUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.util.concurrent.Future;

@@ -10,7 +10,16 @@ package com.madiot.poke.process;
 
 import com.madiot.poke.api.IProcessDef;
 import com.madiot.poke.api.IProcessLink;
+import com.madiot.poke.codec.message.NoticeMessage;
+import com.madiot.poke.context.api.IPlayObserver;
 import com.madiot.poke.context.api.IPlayRound;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @ClassName: LadgtPlayProcessLink
@@ -19,6 +28,9 @@ import com.madiot.poke.context.api.IPlayRound;
  * @date 2017/8/21
  */
 public class LadgtPlayProcessLink implements IProcessLink {
+
+    private static final int DISCARD_TIME_OUT_SECOND = 15;
+
     @Override
     public IProcessDef getProcessType() {
         return LadgtProcessLinkEnum.PLAY;
@@ -26,6 +38,8 @@ public class LadgtPlayProcessLink implements IProcessLink {
 
     @Override
     public void doProcess(IPlayRound playRound) {
-
+        while (!playRound.isEnd()) {
+            playRound.round(DISCARD_TIME_OUT_SECOND);
+        }
     }
 }

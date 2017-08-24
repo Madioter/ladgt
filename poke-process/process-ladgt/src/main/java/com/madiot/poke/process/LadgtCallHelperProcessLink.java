@@ -11,7 +11,7 @@ package com.madiot.poke.process;
 import com.madiot.poke.api.IProcessDef;
 import com.madiot.poke.api.IProcessLink;
 import com.madiot.poke.codec.ladgt.LadgtCommandTypeEnum;
-import com.madiot.poke.codec.ladgt.notices.CallHelper;
+import com.madiot.poke.codec.ladgt.notices.downstream.CallHelper;
 import com.madiot.poke.codec.message.NoticeMessage;
 import com.madiot.poke.context.api.IPlayObserver;
 import com.madiot.poke.context.api.IPlayRound;
@@ -40,36 +40,6 @@ public class LadgtCallHelperProcessLink implements IProcessLink {
 
     @Override
     public void doProcess(IPlayRound playRound) {
-        Integer cardIndex = null;
-        List<IPlayObserver> players = playRound.getPlayers();
-        for (IPlayObserver player : players) {
-            Future<NoticeMessage> result = player.sendCallHelperMessage();
-            if (result != null) {
-                cardIndex = dealResult(result, player);
-            }
-        }
-        if (cardIndex != null) {
-            for (IPlayObserver player : players) {
-                player.setHelperRole(cardIndex);
-            }
-        }
-    }
-
-    private Integer dealResult(Future<NoticeMessage> result, IPlayObserver player) {
-        try {
-            NoticeMessage message = result.get(CALL_HELPER_TIME_OUT, TimeUnit.SECONDS);
-            if (message.getType() == LadgtCommandTypeEnum.CALL_HELPER) {
-                CallHelper callHelper = (CallHelper) message.getData();
-                if (callHelper.getPokeCard() != null) {
-                    boolean value = player.checkCallHelper(callHelper.getPokeCard().getIndex());
-                    if (value) {
-                        return callHelper.getPokeCard().getIndex();
-                    }
-                }
-            }
-        } catch (InterruptedException | ExecutionException | TimeoutException | ContextException e) {
-            return null;
-        }
-        return null;
+        playRound.callHelper(CALL_HELPER_TIME_OUT);
     }
 }

@@ -1,5 +1,8 @@
 package com.madiot.poke.codec.message;
 
+import com.madiot.common.spring.SpringContextUtils;
+import com.madiot.common.utils.bytes.ByteBuffer;
+import com.madiot.common.utils.bytes.ByteUtils;
 import com.madiot.poke.codec.api.ICommandFactory;
 import com.madiot.poke.codec.api.ICommandType;
 import com.madiot.poke.codec.api.IDecodeAble;
@@ -7,12 +10,11 @@ import com.madiot.poke.codec.api.IEncodeAble;
 import com.madiot.poke.codec.api.INoticeResult;
 import com.madiot.poke.codec.api.IResultFactory;
 import com.madiot.poke.codec.common.IndexCreator;
+import com.madiot.poke.codec.constants.CodecConstants;
 import com.madiot.poke.codec.exception.CodecException;
-import com.madioter.common.spring.SpringContextUtils;
-import com.madioter.common.utils.bytes.ByteBuffer;
-import com.madioter.common.utils.bytes.ByteUtils;
 import org.apache.commons.lang.ArrayUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -26,7 +28,7 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
 
     private static IResultFactory resultFactory = SpringContextUtils.getBeanByClass(IResultFactory.class);
 
-    private static final byte[] START_TAG = "MADIOT".getBytes();
+    private static final byte[] START_TAG = CodecConstants.START_TAG.getBytes();
 
     private Date timestamp = new Date();
 
@@ -40,6 +42,18 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
 
     private Integer dataLength;
 
+    public static ICommandType getCommand(byte[] data) {
+        return commandFactory.getCommandType(data[CodecConstants.COMMAND_TYPE_INDEX]);
+    }
+
+    public static INoticeResult getResult(byte[] data) {
+        return resultFactory.getResult(data[CodecConstants.RESULT_TYPE_INDEX]);
+    }
+
+    public static long getId(byte[] data) {
+        return ByteUtils.bytesToLong(Arrays.copyOfRange(data, 13, 21));
+    }
+
     public NoticeHead(Integer userId, ICommandType commandType, INoticeResult result) {
         this.userId = userId;
         this.commandType = commandType;
@@ -50,17 +64,21 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
 
     }
 
+    public NoticeHead(ByteBuffer buffer) {
+        decode(buffer);
+    }
+
     @Override
     public void decode(ByteBuffer buffer) {
-        if (!ArrayUtils.isEquals(buffer.read(5), START_TAG)) {
+        if (!ArrayUtils.isEquals(buffer.read(START_TAG.length), START_TAG)) {
             throw new CodecException("message code is not start with 'MADIOT', check the message is Complete");
         }
-        this.timestamp = new Date(ByteUtils.bytesToLong(buffer.read(8)));
-        this.index = ByteUtils.bytesToLong(buffer.read(8));
-        this.userId = ByteUtils.bytesToInt(buffer.read(4));
+        this.timestamp = new Date(ByteUtils.bytesToLong(buffer.read(CodecConstants.HEAD_TIMESTAMP)));
+        this.index = ByteUtils.bytesToLong(buffer.read(CodecConstants.HEAD_INDEX));
+        this.userId = ByteUtils.bytesToInt(buffer.read(CodecConstants.HEAD_USER_ID));
         this.commandType = commandFactory.getCommandType(buffer.readInt());
         this.result = resultFactory.getResult(buffer.readInt());
-        this.dataLength = ByteUtils.bytesToInt(buffer.read(4));
+        this.dataLength = ByteUtils.bytesToInt(buffer.read(CodecConstants.HEAD_DATA));
     }
 
     public void encode(ByteBuffer buffer, int dataLength) {
@@ -71,12 +89,12 @@ public class NoticeHead implements IEncodeAble, IDecodeAble {
     @Override
     public void encode(ByteBuffer buffer) {
         buffer.write(START_TAG);
-        buffer.write(ByteUtils.longToBytes(this.timestamp.getTime(), 8));
-        buffer.write(ByteUtils.longToBytes(this.index, 8));
-        buffer.write(ByteUtils.intToBytes(this.userId, 4));
+        buffer.write(ByteUtils.longToBytes(this.timestamp.getTime(), CodecConstants.HEAD_TIMESTAMP));
+        buffer.write(ByteUtils.longToBytes(this.index, CodecConstants.HEAD_INDEX));
+        buffer.write(ByteUtils.intToBytes(this.userId, CodecConstants.HEAD_USER_ID));
         buffer.write(this.commandType.getBytes());
         buffer.write(this.result.getBytes());
-        buffer.write(ByteUtils.intToBytes(this.dataLength, 4));
+        buffer.write(ByteUtils.intToBytes(this.dataLength, CodecConstants.HEAD_DATA));
     }
 
     public Date getTimestamp() {

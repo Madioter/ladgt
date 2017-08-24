@@ -9,7 +9,7 @@
 package com.madiot.poke.codec.ladgt.model;
 
 import com.madiot.poke.codec.common.IComponent;
-import com.madioter.common.utils.bytes.ByteBuffer;
+import com.madiot.common.utils.bytes.ByteBuffer;
 
 /**
  * @ClassName: LadgtPokeCard

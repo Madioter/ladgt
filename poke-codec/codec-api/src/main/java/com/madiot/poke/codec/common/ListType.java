@@ -9,8 +9,8 @@
 package com.madiot.poke.codec.common;
 
 import com.madiot.common.reflect.MetaClass;
-import com.madioter.common.utils.bytes.ByteBuffer;
-import com.madioter.common.utils.bytes.ByteUtils;
+import com.madiot.common.utils.bytes.ByteBuffer;
+import com.madiot.common.utils.bytes.ByteUtils;
 
 import java.util.ArrayList;
 

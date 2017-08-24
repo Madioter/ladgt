@@ -8,8 +8,6 @@
  */
 package com.madiot.poke.api.rule;
 
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -25,4 +23,6 @@ public interface IOneHand<T> {
     List<T> getCards();
 
     String getPokeType();
+
+    int getPlayerId();
 }

@@ -26,7 +26,7 @@ public class LadgtScoreProcessLink implements IProcessLink {
 
     @Override
     public void doProcess(IPlayRound playRound) {
-        return;
+        playRound.score();
     }
 
 }

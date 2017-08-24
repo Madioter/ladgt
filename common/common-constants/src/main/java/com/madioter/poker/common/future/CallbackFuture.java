@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by DELL on 2017/5/7.
  */
-public class CallbackFuture <T> implements Future<T> {
+public class CallbackFuture<T> implements Future<T> {
     private volatile boolean completed;
     private volatile boolean cancelled;
     private volatile T result;
@@ -108,4 +108,5 @@ public class CallbackFuture <T> implements Future<T> {
     public boolean cancel() {
         return this.cancel(true);
     }
+
 }

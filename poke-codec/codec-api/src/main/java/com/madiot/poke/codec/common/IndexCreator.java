@@ -1,7 +1,7 @@
 package com.madiot.poke.codec.common;
 
-import com.madioter.common.utils.config.ConfigUtil;
-import com.madioter.common.utils.http.IPUtil;
+import com.madiot.common.utils.config.ConfigUtil;
+import com.madiot.common.utils.http.IPUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

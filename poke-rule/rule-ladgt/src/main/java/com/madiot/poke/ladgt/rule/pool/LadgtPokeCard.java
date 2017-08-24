@@ -84,6 +84,14 @@ public class LadgtPokeCard implements IPokeCard {
             }
             return null;
         }
+
+        @Override
+        public int compareWith(ICardValue value) {
+            if (value instanceof CardValue) {
+                return this.ordinal() - ((CardValue) value).ordinal();
+            }
+            return 1;
+        }
     }
 
     public int getIndex() {

@@ -16,8 +16,6 @@ package com.madiot.poke.ladgt.rule.config;
  */
 public class LadgtConstants {
 
-    public static final int MAX_PLAYER = 5;
-
     public static final int PLAYER_CARDS = 31;
 
     public static final int MAX_CARDS = 54 * 3;

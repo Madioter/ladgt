@@ -8,25 +8,30 @@
  */
 package com.madiot.poke.context.observer;
 
+import com.madiot.common.utils.collection.CollectionUtil;
 import com.madiot.poke.api.rule.IOneHand;
-import com.madiot.poke.api.rule.IPokeCardFactory;
 import com.madiot.poke.codec.ladgt.model.LadgtRoleEnum;
+import com.madiot.poke.codec.message.NoticeHead;
 import com.madiot.poke.codec.message.NoticeMessage;
 import com.madiot.poke.context.LadgtCodecHandler;
 import com.madiot.poke.context.api.IPlayListener;
 import com.madiot.poke.context.api.IPlayObserver;
 import com.madiot.poke.context.api.IPlayer;
 import com.madiot.poke.context.config.IConfiguration;
-import com.madiot.poke.errors.PokeContainsException;
+import com.madiot.poke.context.exception.ContextException;
+import com.madiot.poke.context.model.LadgtHandCards;
+import com.madiot.poke.context.model.NoticeMessageFuture;
+import com.madiot.poke.context.model.PlayScore;
 import com.madiot.poke.ladgt.rule.pool.LadgtDeckPoke;
+import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
 import com.madiot.poke.ladgt.rule.pool.LadgtPokeCard;
+import com.madioter.poker.common.future.CallbackFuture;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * @ClassName: LadgtPlayObserver
@@ -36,7 +41,7 @@ import java.util.concurrent.Future;
  */
 public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
 
-    private List<LadgtPokeCard> pokeCards;
+    private LadgtHandCards pokeCards = new LadgtHandCards();
 
     private final List<IPlayListener> playListeners;
 
@@ -70,18 +75,22 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
 
     @Override
     public void notice(IOneHand oneHand) {
-
+        if (this.player.getId() != oneHand.getPlayerId()) {
+            byte[] message = LadgtCodecHandler.buildNoticeDiscardMessage(this, (LadgtOneHand) oneHand);
+            this.configuration.getPokeMessageServer().sendMessage(message, this.player.getServerIp(), this.player.getId());
+        }
     }
 
     @Override
-    public void play(IOneHand oneHand) {
-        doListener(oneHand, IPlayListener.ListenerOccasion.BEFORE_PLAY);
-        if (checkContains(oneHand)) {
-            remove(oneHand);
+    public CallbackFuture<NoticeMessage> discard(IOneHand lastOneHand) {
+        byte[] message;
+        if (lastOneHand != null && lastOneHand.getPlayerId() == this.player.getId()) {
+            message = LadgtCodecHandler.buildDiscardMessage(this, null);
         } else {
-            throw new PokeContainsException("not have enough poke cards");
+            message = LadgtCodecHandler.buildDiscardMessage(this, (LadgtOneHand) lastOneHand);
         }
-        doListener(oneHand, IPlayListener.ListenerOccasion.AFTER_PLAY);
+        this.configuration.getPokeMessageServer().sendMessage(message, this.player.getServerIp(), this.player.getId());
+        return new NoticeMessageFuture(NoticeHead.getId(message));
     }
 
     private void doListener(IOneHand oneHand, IPlayListener.ListenerOccasion occasion) {
@@ -92,6 +101,10 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
         }
     }
 
+    private boolean isLandloard() {
+        return this.role == LadgtRoleEnum.LAND_LORD || this.role == LadgtRoleEnum.LAND_LORD_WITH_HELPER;
+    }
+
     @Override
     public void pass() {
 
@@ -99,7 +112,7 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
 
     @Override
     public void deal(List<LadgtPokeCard> pokeCards, LadgtPokeCard landlordCard) {
-        this.pokeCards = pokeCards;
+        this.pokeCards.addAll(pokeCards);
         this.landlordCard = landlordCard;
         if (this.pokeCards.contains(LadgtDeckPoke.TAGGED_EIGHT)) {
             this.haveTaggedCard = true;
@@ -107,15 +120,16 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
     }
 
     @Override
-    public void sendDealMessage() {
-        byte[] message = LadgtCodecHandler.buildDealMessage(this);
-        this.configuration.getPokeMessageServer().sendMessage(message);
+    public void sendDealMessage(IPlayer landlordPlayer) {
+        byte[] message = LadgtCodecHandler.buildDealMessage(this, landlordPlayer);
+        this.configuration.getPokeMessageServer().sendMessage(message, this.player.getServerIp(), this.player.getId());
     }
 
-    public Future<NoticeMessage> sendCallHelperMessage() {
+    public CallbackFuture<NoticeMessage> sendCallHelperMessage() {
         if (this.role == LadgtRoleEnum.LAND_LORD_WITH_HELPER || this.role == LadgtRoleEnum.LAND_LORD) {
             byte[] callHelperMessage = LadgtCodecHandler.buildCallHelperMessage(this);
-            return this.configuration.getPokeMessageServer().sendMessage(callHelperMessage);
+            this.configuration.getPokeMessageServer().sendMessage(callHelperMessage, this.player.getServerIp(), this.player.getId());
+            return new NoticeMessageFuture(NoticeHead.getId(callHelperMessage));
         }
         return null;
     }
@@ -138,6 +152,34 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
     }
 
     @Override
+    public IOneHand defaultDiscard() {
+        if (this.pokeCards.size() > 0) {
+            List<LadgtPokeCard> cards = new ArrayList<>();
+            cards.add(this.pokeCards.get(0));
+            return new LadgtOneHand(cards, configuration, this.player.getId());
+        }
+        throw new ContextException("don't have enough poke to discard");
+    }
+
+    @Override
+    public void removeDiscard(IOneHand oneHand) {
+        this.pokeCards.removeAll(oneHand.getCards());
+    }
+
+    @Override
+    public List<LadgtPokeCard> getCards(List<Integer> cards) {
+        return this.pokeCards.getCards(cards);
+    }
+
+    @Override
+    public boolean isEnd() {
+        if (CollectionUtil.isEmpty(this.pokeCards)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void setHelperRole(int pokeCardIndex) {
         LadgtPokeCard pokeCard = LadgtPokeCard.getInstance(pokeCardIndex);
         if (pokeCards.contains(pokeCard) && role != LadgtRoleEnum.LAND_LORD_WITH_HELPER) {
@@ -145,18 +187,12 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
         } else if (pokeCards.contains(pokeCard) && role == LadgtRoleEnum.LAND_LORD_WITH_HELPER) {
             this.role = LadgtRoleEnum.LAND_LORD;
         }
+        byte[] helperNoticeMessage = LadgtCodecHandler.buildHelperNoticeMessage(this, pokeCard);
+        this.configuration.getPokeMessageServer().sendMessage(helperNoticeMessage, this.player.getServerIp(), this.player.getId());
     }
 
     private boolean checkContains(IOneHand oneHand) {
-        return pokeCards.containsAll(oneHand.getCards());
-    }
-
-    public void remove(IOneHand oneHand) {
-        pokeCards.removeAll(oneHand.getCards());
-    }
-
-    public IPokeCardFactory getPokeCardFactory() {
-        return configuration.getPokeCardFactory();
+        return this.pokeCards.containsAll(oneHand.getCards());
     }
 
     public boolean isHaveTaggedCard() {
@@ -165,6 +201,12 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
 
     public void addCards(List<LadgtPokeCard> nextList) {
         this.pokeCards.addAll(nextList);
+        Collections.sort(this.pokeCards, new Comparator<LadgtPokeCard>() {
+            @Override
+            public int compare(LadgtPokeCard o1, LadgtPokeCard o2) {
+                return o1.getValue().compareWith(o2.getValue());
+            }
+        });
     }
 
     public LadgtRoleEnum getRole() {
@@ -187,7 +229,19 @@ public class LadgtPlayObserver implements IPlayObserver<LadgtPokeCard> {
         return this.landlordCard;
     }
 
+    @Override
     public IPlayer getPlayer() {
         return this.player;
+    }
+
+    public PlayScore calcScore(LadgtRoleEnum winRole) {
+        int score = configuration.getScoreRule().getScore(this.role, winRole);
+        this.player.calcScore(score);
+        return new PlayScore(this.player, score, score > 0);
+    }
+
+    public void sendScore(List<PlayScore> scores) {
+        byte[] scoreMessage = LadgtCodecHandler.buildScoreMessage(this, scores);
+        this.configuration.getPokeMessageServer().sendMessage(scoreMessage, this.player.getServerIp(), this.player.getId());
     }
 }

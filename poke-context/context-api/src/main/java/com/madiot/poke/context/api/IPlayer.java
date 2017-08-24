@@ -19,4 +19,10 @@ public interface IPlayer {
     String getName();
 
     Integer getId();
+
+    int getLastScore();
+
+    void calcScore(int score);
+
+    String getServerIp();
 }

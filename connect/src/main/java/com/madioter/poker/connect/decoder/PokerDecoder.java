@@ -8,8 +8,8 @@
  */
 package com.madioter.poker.connect.decoder;
 
-import com.madioter.common.utils.bytes.ByteUtils;
-import com.madioter.poker.netty.message.common.constants.MessageConstants;
+import com.madiot.poke.codec.constants.CodecConstants;
+import com.madiot.common.utils.bytes.ByteUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -41,9 +41,9 @@ public class PokerDecoder extends ByteToMessageDecoder {
                 return;
             }
 
-            final byte[] buf = new byte[MessageConstants.PACKAGE_HEADER_LENGTH];
+            final byte[] buf = new byte[CodecConstants.HEAD_LENGTH];
             int total = in.readableBytes();
-            if (total < MessageConstants.PACKAGE_HEADER_LENGTH) {
+            if (total < CodecConstants.HEAD_LENGTH) {
                 return;
             }
             in.getBytes(in.readerIndex(), buf);
@@ -74,10 +74,10 @@ public class PokerDecoder extends ByteToMessageDecoder {
      * @return 消息长度
      */
     private int getFrameActualLength(byte[] startCode) {
-        if (Arrays.equals(Arrays.copyOfRange(startCode, 0, 2), MessageConstants.PACKAGE_HEADER)) {
-            int dataLength = ByteUtils.bytesToInt(Arrays.copyOfRange(startCode, MessageConstants.DATA_LENGTH_POSITION_START,
-                    MessageConstants.DATA_LENGTH_POSITION_END));
-            return MessageConstants.PACKAGE_HEADER_LENGTH + dataLength + MessageConstants.CHECK_CODE_LENGTH;
+        if (Arrays.equals(Arrays.copyOfRange(startCode, 0, CodecConstants.START_TAG.length()), CodecConstants.START_TAG.getBytes())) {
+            int dataLength = ByteUtils.bytesToInt(Arrays.copyOfRange(startCode, CodecConstants.DATA_LENGTH_POSITION_START,
+                    CodecConstants.DATA_LENGTH_POSITION_END));
+            return CodecConstants.HEAD_LENGTH + dataLength + CodecConstants.CHECK_CODE_LENGTH;
         } else {
             logger.error("解析失败:" + ByteUtils.bytesToHexString(startCode));
         }

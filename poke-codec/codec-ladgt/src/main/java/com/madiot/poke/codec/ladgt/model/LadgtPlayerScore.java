@@ -9,8 +9,8 @@
 package com.madiot.poke.codec.ladgt.model;
 
 import com.madiot.poke.codec.common.IComponent;
-import com.madioter.common.utils.bytes.ByteBuffer;
-import com.madioter.common.utils.bytes.ByteUtils;
+import com.madiot.common.utils.bytes.ByteBuffer;
+import com.madiot.common.utils.bytes.ByteUtils;
 
 /**
  * @ClassName: LadgtPlayerScore
@@ -63,4 +63,6 @@ public class LadgtPlayerScore implements IComponent {
     public void setScore(Integer score) {
         this.score = score;
     }
+
+
 }

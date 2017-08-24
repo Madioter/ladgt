@@ -8,8 +8,8 @@
  */
 package com.madiot.poke.codec.common;
 
-import com.madioter.common.utils.bytes.ByteBuffer;
-import com.madioter.common.utils.bytes.ByteUtils;
+import com.madiot.common.utils.bytes.ByteBuffer;
+import com.madiot.common.utils.bytes.ByteUtils;
 
 /**
  * @ClassName: StringType
@@ -20,6 +20,14 @@ import com.madioter.common.utils.bytes.ByteUtils;
 public class StringType implements IComponent {
 
     private String data;
+
+    public StringType() {
+
+    }
+
+    public StringType(String message) {
+        this.data = message;
+    }
 
     @Override
     public void decode(ByteBuffer buffer) {

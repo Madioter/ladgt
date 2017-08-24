@@ -8,6 +8,8 @@
  */
 package com.madiot.poke.context.api;
 
+import com.madiot.poke.codec.message.NoticeMessage;
+
 import java.util.List;
 
 /**
@@ -20,7 +22,15 @@ public interface IPlayRound {
 
     <T extends IPlayObserver> List<T> getPlayers();
 
-    void end();
-
     void deal();
+
+    void callHelper(int timeOut);
+
+    boolean isEnd();
+
+    void round(int timeout);
+
+    void score();
+
+    void setReceipt(NoticeMessage noticeMessage);
 }

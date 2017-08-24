@@ -1,13 +1,13 @@
 package com.madiot.poke.codec.message;
 
+import com.madiot.common.spring.SpringContextUtils;
+import com.madiot.common.utils.bytes.ByteBuffer;
 import com.madiot.poke.codec.api.ICommandType;
 import com.madiot.poke.codec.api.INoticeData;
 import com.madiot.poke.codec.api.INoticeDataFactory;
 import com.madiot.poke.codec.api.INoticeMessage;
 import com.madiot.poke.codec.api.INoticeResult;
 import com.madiot.poke.codec.exception.CodecException;
-import com.madioter.common.spring.SpringContextUtils;
-import com.madioter.common.utils.bytes.ByteBuffer;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -107,5 +107,9 @@ public class NoticeMessage implements INoticeMessage {
 
     public NoticeHead getNoticeHead() {
         return noticeHead;
+    }
+
+    public Integer getPlayerId() {
+        return noticeHead.getUserId();
     }
 }

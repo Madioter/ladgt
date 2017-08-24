@@ -8,17 +8,19 @@
  */
 package com.madiot.poke.context.config;
 
+import com.madiot.common.spring.SpringContextUtils;
 import com.madiot.poke.api.rule.IPokeCardFactory;
 import com.madiot.poke.api.rule.IPokeTypeComparator;
 import com.madiot.poke.api.rule.IPokeTypeRegistry;
+import com.madiot.poke.api.rule.IScoreRule;
 import com.madiot.poke.codec.api.INoticeDataFactory;
 import com.madiot.poke.codec.ladgt.LadgtNoticeDataFactory;
+import com.madiot.poke.dubbo.api.connect.IMessageSendService;
 import com.madiot.poke.ladgt.rule.comparator.LadgtComparator;
 import com.madiot.poke.ladgt.rule.poketype.LadgtPokeTypeRegistry;
 import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
 import com.madiot.poke.ladgt.rule.pool.LadgtPokeCardFactory;
-import com.madiot.poke.server.api.IPokeMessageServer;
-import com.madioter.common.spring.SpringContextUtils;
+import com.madiot.poke.ladgt.rule.score.LadgtScoreRule;
 
 /**
  * @ClassName: Configuration
@@ -36,7 +38,9 @@ public class LadgtConfiguration implements IConfiguration<LadgtOneHand> {
 
     private INoticeDataFactory noticeDataFactory = new LadgtNoticeDataFactory();
 
-    private IPokeMessageServer pokeMessageServer = SpringContextUtils.getBeanByClass(IPokeMessageServer.class);
+    private IMessageSendService pokeMessageServer = SpringContextUtils.getBeanByClass(IMessageSendService.class);
+
+    private IScoreRule scoreRule = new LadgtScoreRule();
 
     public IPokeTypeRegistry getPokeTypeRegistry() {
         return pokeTypeRegistry;
@@ -65,7 +69,11 @@ public class LadgtConfiguration implements IConfiguration<LadgtOneHand> {
         return noticeDataFactory;
     }
 
-    public IPokeMessageServer getPokeMessageServer() {
+    public IMessageSendService getPokeMessageServer() {
         return pokeMessageServer;
+    }
+
+    public IScoreRule getScoreRule() {
+        return scoreRule;
     }
 }

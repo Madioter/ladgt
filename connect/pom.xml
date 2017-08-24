@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>com.madioter</groupId>
-            <artifactId>domain</artifactId>
+            <artifactId>codec-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

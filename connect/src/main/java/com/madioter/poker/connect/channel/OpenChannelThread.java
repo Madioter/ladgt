@@ -40,13 +40,12 @@ public class OpenChannelThread extends Thread {
 
     @Override
     public void run() {
-
         InetSocketAddress insocket = (InetSocketAddress) channel.remoteAddress();
-        String ip=insocket.getAddress().getHostAddress();
+        String ip = insocket.getAddress().getHostAddress();
         //过滤掉阿里云HA心跳连接的打印信息
-        if(ip.startsWith("10.")||ip.startsWith("100.")){
+        if (ip.startsWith("10.") || ip.startsWith("100.")) {
 
-        }else{
+        } else {
             LOGGER.info("开启远程TCP连接：remoteIp: {}|serverIp: {}", remoteIp, serverIp);
         }
         // 预留做连接成功后操作

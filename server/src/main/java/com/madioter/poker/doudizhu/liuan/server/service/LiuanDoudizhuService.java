@@ -1,6 +1,6 @@
 package com.madioter.poker.doudizhu.liuan.server.service;
 
-import com.madioter.common.redis.IncreaseIdCreator;
+import com.madiot.common.redis.component.IncreaseIdCreator;
 import com.madioter.poker.common.PokerDO;
 import com.madioter.poker.common.future.CallbackFuture;
 import com.madioter.poker.common.constants.Constants;

@@ -8,7 +8,7 @@
  */
 package com.madioter.poker.connect.dto;
 
-import com.madioter.common.utils.config.ConfigUtil;
+import com.madiot.common.utils.config.ConfigUtil;
 import io.netty.channel.Channel;
 
 /**
@@ -36,10 +36,10 @@ public class ChannelInfo {
 
 
     /**
-     * 车辆唯一标识
+     * 唯一标识
 
      */
-    private String vin;
+    private Integer playerId;
 
     /**
      * 无参构造方法：设置当前时间为心跳时间
@@ -78,12 +78,11 @@ public class ChannelInfo {
         return false;
     }
 
-
-    public String getVin() {
-        return vin;
+    public Integer getPlayerId() {
+        return playerId;
     }
 
-    public void setVin(String vin) {
-        this.vin = vin;
+    public void setPlayerId(Integer playerId) {
+        this.playerId = playerId;
     }
 }

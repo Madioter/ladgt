@@ -18,10 +18,6 @@ public class LadgtDealProcessLink implements IProcessLink {
 
     @Override
     public void doProcess(IPlayRound playRound) {
-        List<IPlayObserver> players = playRound.getPlayers();
         playRound.deal();
-        for (IPlayObserver player : players) {
-            player.sendDealMessage();
-        }
     }
 }
