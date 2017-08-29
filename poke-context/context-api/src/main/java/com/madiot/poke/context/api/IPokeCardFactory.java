@@ -6,9 +6,7 @@
  * @date 2017/8/18
  * @version
  */
-package com.madiot.poke.api.rule;
-
-import com.madiot.poke.context.api.IDistributional;
+package com.madiot.poke.context.api;
 
 /**
  * @ClassName: IPokeCardPool

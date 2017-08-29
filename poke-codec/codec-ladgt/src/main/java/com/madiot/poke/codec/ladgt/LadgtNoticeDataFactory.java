@@ -20,7 +20,6 @@ import com.madiot.poke.codec.ladgt.notices.upstream.Login;
 import com.madiot.poke.codec.ladgt.notices.downstream.NoticeDiscard;
 import com.madiot.poke.codec.ladgt.notices.downstream.NoticeHelper;
 import com.madiot.poke.codec.ladgt.notices.downstream.NoticeScore;
-import com.madiot.poke.codec.ladgt.notices.Pass;
 import com.madiot.poke.codec.ladgt.notices.upstream.Ready;
 import com.madiot.common.utils.collection.CollectionUtil;
 import org.apache.commons.lang.math.NumberUtils;
@@ -45,7 +44,6 @@ public class LadgtNoticeDataFactory implements INoticeDataFactory {
         register(LadgtCommandTypeEnum.CALL_HELPER, CallHelper.class);
         register(LadgtCommandTypeEnum.NOTICE_HELPER, NoticeHelper.class);
         register(LadgtCommandTypeEnum.DISCARD, Discard.class);
-        register(LadgtCommandTypeEnum.PASS, Pass.class);
         register(LadgtCommandTypeEnum.NOTICE_DISCARD, NoticeDiscard.class);
         register(LadgtCommandTypeEnum.NOTICE_SCORE, NoticeScore.class);
     }
