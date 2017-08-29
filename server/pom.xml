@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>server-ladgt</module>
+        <module>server-base</module>
     </modules>
 
     <dependencies>

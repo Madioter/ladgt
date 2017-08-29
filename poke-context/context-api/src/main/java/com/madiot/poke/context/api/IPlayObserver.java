@@ -11,10 +11,9 @@ package com.madiot.poke.context.api;
 import com.madiot.poke.api.rule.IOneHand;
 import com.madiot.poke.api.rule.IPokeCard;
 import com.madiot.poke.codec.message.NoticeMessage;
-import com.madioter.poker.common.future.CallbackFuture;
+import com.madiot.poker.common.future.CallbackFuture;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * @ClassName: IPokeObserver

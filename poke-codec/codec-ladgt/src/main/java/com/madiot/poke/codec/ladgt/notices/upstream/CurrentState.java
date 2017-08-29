@@ -8,17 +8,19 @@
  */
 package com.madiot.poke.codec.ladgt.notices.upstream;
 
+import com.madiot.common.utils.bytes.ByteUtils;
 import com.madiot.poke.codec.api.INoticeData;
 import com.madiot.poke.codec.api.INoticeResult;
 import com.madiot.poke.codec.common.ListType;
+import com.madiot.poke.codec.ladgt.LadgtNoticeResultEnum;
 import com.madiot.poke.codec.ladgt.model.LadgtCard;
 import com.madiot.poke.codec.ladgt.model.LadgtPlayer;
 import com.madiot.common.utils.bytes.ByteBuffer;
 
 /**
+ * @author Yi.Wang2
  * @ClassName: CurrentState
  * @Description: 获取当前状态
- * @author Yi.Wang2
  * @date 2017/8/22
  */
 public class CurrentState implements INoticeData {
@@ -29,7 +31,7 @@ public class CurrentState implements INoticeData {
 
     private ListType<LadgtCard> cards = new ListType<>(LadgtCard.class);
 
-    private int deskIndex;
+    private int roundIndex;
 
     private ListType<LadgtPlayer> players = new ListType<>(LadgtPlayer.class);
 
@@ -39,11 +41,58 @@ public class CurrentState implements INoticeData {
 
     @Override
     public void decode(ByteBuffer buffer) {
-
+        if (result == LadgtNoticeResultEnum.SUCCESS) {
+            this.playerId = ByteUtils.bytesToInt(buffer.read(4));
+            this.cards.decode(buffer);
+            this.roundIndex = ByteUtils.bytesToInt(buffer.read(4));
+            this.players.decode(buffer);
+        } else if (result == LadgtNoticeResultEnum.COMMAND) {
+            this.playerId = ByteUtils.bytesToInt(buffer.read(4));
+        }
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
+        if (result == LadgtNoticeResultEnum.SUCCESS) {
+            buffer.write(ByteUtils.intToBytes(this.playerId, 4));
+            this.cards.encode(buffer);
+            buffer.write(ByteUtils.intToBytes(this.roundIndex, 4));
+            this.players.encode(buffer);
+        } else {
+            buffer.write(ByteUtils.intToBytes(this.playerId, 4));
+        }
 
+    }
+
+    public Integer getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(Integer playerId) {
+        this.playerId = playerId;
+    }
+
+    public ListType<LadgtCard> getCards() {
+        return cards;
+    }
+
+    public void setCards(ListType<LadgtCard> cards) {
+        this.cards = cards;
+    }
+
+    public int getRoundIndex() {
+        return roundIndex;
+    }
+
+    public void setRoundIndex(int roundIndex) {
+        this.roundIndex = roundIndex;
+    }
+
+    public ListType<LadgtPlayer> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(ListType<LadgtPlayer> players) {
+        this.players = players;
     }
 }

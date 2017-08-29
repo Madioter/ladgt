@@ -15,7 +15,7 @@ import com.madiot.common.redis.model.RoundInfoDO;
 import com.madiot.common.redis.service.IPokeRedisService;
 import com.madiot.common.utils.json.JsonUtils;
 import com.madiot.common.utils.string.StringUtils;
-import com.madioter.poker.common.exception.ConnectionException;
+import com.madiot.poker.common.exception.ConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

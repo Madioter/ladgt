@@ -25,7 +25,7 @@ import com.madiot.poke.context.model.PlayScore;
 import com.madiot.poke.ladgt.rule.pool.LadgtDeckPoke;
 import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
 import com.madiot.poke.ladgt.rule.pool.LadgtPokeCard;
-import com.madioter.poker.common.future.CallbackFuture;
+import com.madiot.poker.common.future.CallbackFuture;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;

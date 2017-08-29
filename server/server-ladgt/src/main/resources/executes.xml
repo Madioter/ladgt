@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    <bean id="processExecuteContext" class="com.madiot.poke.server.base.ProcessExecuteContext">
+        <property name="services">
+            <map>
+                <entry key="DEAL" value="com.madiot.poke.server.ladgt.executes.NoResultExecute"/>
+                <entry key="NOTICE_HELPER" value="com.madiot.poke.server.ladgt.executes.NoResultExecute"/>
+                <entry key="NOTICE_DISCARD" value="com.madiot.poke.server.ladgt.executes.NoResultExecute"/>
+                <entry key="NOTICE_SCORE" value="com.madiot.poke.server.ladgt.executes.NoResultExecute"/>
+                <entry key="NOTICE_SPEAK" value="com.madiot.poke.server.ladgt.executes.NoResultExecute"/>
+                <entry key="SPEAK" value="com.madiot.poke.server.ladgt.executes.SpeakExecute"/>
+                <entry key="CURRENT_STATE" value="com.madiot.poke.server.ladgt.executes.CurrentStateExecute"/>
+                <entry key="CALL_HELPER" value="com.madiot.poke.server.ladgt.executes.CallbackExecute"/>
+                <entry key="DISCARD" value="com.madiot.poke.server.ladgt.executes.CallbackExecute"/>
+
+            </map>
+        </property>
+    </bean>
+</beans>

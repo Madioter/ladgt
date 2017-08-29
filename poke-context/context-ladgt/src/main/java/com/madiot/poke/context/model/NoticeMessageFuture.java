@@ -9,7 +9,7 @@
 package com.madiot.poke.context.model;
 
 import com.madiot.poke.codec.message.NoticeMessage;
-import com.madioter.poker.common.future.CallbackFuture;
+import com.madiot.poker.common.future.CallbackFuture;
 
 /**
  * @ClassName: NoticeMessageFuture

@@ -8,7 +8,7 @@
  */
 package com.madiot.poke.dubbo.api.connect;
 
-import com.madioter.poker.common.exception.ConnectionException;
+import com.madiot.poker.common.exception.ConnectionException;
 
 /**
  * @ClassName: IMessageSendService

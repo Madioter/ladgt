@@ -1,6 +1,6 @@
 package com.madioter.poker.doudizhu.liuan.server.observer;
 
-import com.madioter.poker.common.future.CallbackFuture;
+import com.madiot.poker.common.future.CallbackFuture;
 import com.madioter.poker.netty.message.common.enums.RoleEnum;
 import com.madioter.poker.doudizhu.liuan.domain.PlayerCardDO;
 

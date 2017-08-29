@@ -22,17 +22,21 @@ import com.madiot.poke.context.api.IPlayRound;
 import com.madiot.poke.context.api.IPlayer;
 import com.madiot.poke.dubbo.api.connect.IMessageSendService;
 import com.madiot.poke.dubbo.api.server.IProcessService;
+import com.madiot.poke.server.base.IProcessExecute;
+import com.madiot.poke.server.base.ProcessExecuteContext;
 import com.madiot.poke.server.ladgt.context.PlayRoundContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 /**
+ * @author Yi.Wang2
  * @ClassName: LadgtProcessService
  * @Description: TODO
- * @author Yi.Wang2
  * @date 2017/8/24
  */
+@Service
 public class LadgtProcessService implements IProcessService {
 
     @Autowired
@@ -41,59 +45,16 @@ public class LadgtProcessService implements IProcessService {
     @Autowired
     private IMessageSendService messageSendService;
 
+    @Autowired
+    private ProcessExecuteContext processExecuteContext;
+
     @Override
     public byte[] receiptMessage(byte[] message) {
         NoticeMessage noticeMessage = new NoticeMessage(message);
-        if (noticeMessage.getType() == LadgtCommandTypeEnum.DEAL
-                || noticeMessage.getType() == LadgtCommandTypeEnum.NOTICE_HELPER
-                || noticeMessage.getType() == LadgtCommandTypeEnum.NOTICE_DISCARD
-                || noticeMessage.getType() == LadgtCommandTypeEnum.NOTICE_SCORE
-                || noticeMessage.getType() == LadgtCommandTypeEnum.NOTICE_SPEAK) {
+        IProcessExecute<NoticeMessage> processExecute = processExecuteContext.getService(noticeMessage.getType().toString());
+        if (processExecute == null) {
             return new byte[0];
-        } else if (noticeMessage.getType() == LadgtCommandTypeEnum.CALL_HELPER || noticeMessage.getType() == LadgtCommandTypeEnum.DISCARD) {
-            return callback(noticeMessage);
-        } else if (noticeMessage.getType() == LadgtCommandTypeEnum.SPEAK) {
-            return noticeSpeak(noticeMessage);
-        } else if (noticeMessage.getType() == LadgtCommandTypeEnum.CURRENT_STATE) {
-            return currentState(noticeMessage);
         }
-        return null;
-    }
-
-    private byte[] currentState(NoticeMessage noticeMessage) {
-        return new byte[0];
-    }
-
-    private byte[] noticeSpeak(NoticeMessage noticeMessage) {
-        String message = ((Speak) noticeMessage.getData()).getMessage().getString();
-        ConnectInfoDO connectInfo = redisService.getConnectInfo(noticeMessage.getPlayerId());
-        IPlayRound playRound = PlayRoundContext.get(connectInfo.getRoundIndex());
-        NoticeMessage broadcastMessage = new NoticeMessage(null, LadgtCommandTypeEnum.NOTICE_SPEAK, LadgtNoticeResultEnum.COMMAND);
-        SpeakNotice speakNotice = new SpeakNotice(LadgtNoticeResultEnum.COMMAND);
-        speakNotice.setPlayerId(noticeMessage.getPlayerId());
-        speakNotice.setMessage(new StringType(message));
-        for (IPlayObserver playerObserver : playRound.getPlayers()) {
-            IPlayer player = playerObserver.getPlayer();
-            if (!player.getId().equals(noticeMessage.getPlayerId())) {
-                ByteBuffer buffer = new ByteBuffer();
-                broadcastMessage.setNoticeData(speakNotice);
-                broadcastMessage.getNoticeHead().setUserId(player.getId());
-                broadcastMessage.encode(buffer);
-                messageSendService.sendMessage(buffer.getBytes(), player.getServerIp(), player.getId());
-            }
-        }
-        noticeMessage.getNoticeHead().setResult(LadgtNoticeResultEnum.SUCCESS);
-        noticeMessage.getNoticeHead().setTimestamp(new Date());
-        ByteBuffer buffer = new ByteBuffer();
-        noticeMessage.encode(buffer);
-        return buffer.getBytes();
-    }
-
-    private byte[] callback(NoticeMessage noticeMessage) {
-        ConnectInfoDO connectInfo = redisService.getConnectInfo(noticeMessage.getPlayerId());
-        Integer roundIndex = connectInfo.getRoundIndex();
-        IPlayRound playRound = PlayRoundContext.get(roundIndex);
-        playRound.setReceipt(noticeMessage);
-        return new byte[0];
+        return processExecute.execute(noticeMessage, redisService, messageSendService);
     }
 }
