@@ -21,7 +21,8 @@ import com.madiot.poke.codec.ladgt.notices.downstream.NoticeDiscard;
 import com.madiot.poke.codec.ladgt.notices.downstream.NoticeHelper;
 import com.madiot.poke.codec.ladgt.notices.downstream.NoticeScore;
 import com.madiot.poke.codec.message.NoticeMessage;
-import com.madiot.poke.context.api.IPlayer;
+import com.madiot.poke.context.api.IPlayRound;
+import com.madiot.poker.common.domain.IPlayer;
 import com.madiot.poke.context.model.PlayScore;
 import com.madiot.poke.context.observer.LadgtPlayObserver;
 import com.madiot.poke.ladgt.rule.pool.LadgtOneHand;
@@ -31,9 +32,9 @@ import com.madiot.common.utils.bytes.ByteBuffer;
 import java.util.List;
 
 /**
+ * @author Yi.Wang2
  * @ClassName: LadgtCodecHandler
  * @Description: TODO
- * @author Yi.Wang2
  * @date 2017/8/21
  */
 public class LadgtCodecHandler {
@@ -129,5 +130,29 @@ public class LadgtCodecHandler {
         ByteBuffer byteBuffer = new ByteBuffer();
         message.encode(byteBuffer);
         return byteBuffer.getBytes();
+    }
+
+    public static ListType<LadgtPlayer> getPlayers(IPlayRound playRound) {
+        List<LadgtPlayObserver> observers = playRound.getPlayers();
+        ListType<LadgtPlayer> players = new ListType<>(LadgtPlayer.class);
+        for (LadgtPlayObserver playObserver : observers) {
+            LadgtPlayer ladgtPlayer = new LadgtPlayer(playObserver.getPlayer().getName(), playObserver.getPlayer().getId(),
+                    playObserver.getPokeCards().size(), playObserver.getPlayer().getLastScore());
+            players.add(ladgtPlayer);
+        }
+        return players;
+    }
+
+    public static ListType<LadgtCard> getCards(IPlayRound playRound, Integer playerId) {
+        List<LadgtPlayObserver> observers = playRound.getPlayers();
+        ListType<LadgtCard> cards = new ListType<>(LadgtCard.class);
+        for (LadgtPlayObserver playObserver : observers) {
+            if (playObserver.getPlayer().getId().equals(playerId)) {
+                for (LadgtPokeCard ladgtPokeCard : playObserver.getPokeCards()) {
+                    cards.add(new LadgtCard(ladgtPokeCard.getIndex()));
+                }
+            }
+        }
+        return cards;
     }
 }

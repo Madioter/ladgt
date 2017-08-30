@@ -10,6 +10,7 @@ package com.madiot.poke.codec.ladgt.notices.upstream;
 
 import com.madiot.poke.codec.api.INoticeData;
 import com.madiot.poke.codec.api.INoticeResult;
+import com.madiot.poke.codec.common.StringType;
 import com.madiot.poke.codec.ladgt.LadgtNoticeResultEnum;
 import com.madiot.common.utils.bytes.ByteBuffer;
 import com.madiot.common.utils.bytes.ByteUtils;
@@ -25,9 +26,9 @@ public class Login implements INoticeData {
 
     private INoticeResult result;
 
-    private String ip;
+    private StringType username = new StringType();
 
-    private Integer userId;
+    private StringType password = new StringType();
 
     public Login(INoticeResult result) {
         this.result = result;
@@ -36,32 +37,32 @@ public class Login implements INoticeData {
     @Override
     public void decode(ByteBuffer buffer) {
         if (result == LadgtNoticeResultEnum.COMMAND) {
-            this.ip = IPUtil.deaddr(ByteUtils.bytesToLong(buffer.read(8)));
-            this.userId = ByteUtils.bytesToInt(buffer.read(4));
+            this.username.decode(buffer);
+            this.password.decode(buffer);
         }
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
         if (result == LadgtNoticeResultEnum.COMMAND) {
-            buffer.write(ByteUtils.longToBytes(IPUtil.enaddr(this.ip), 8));
-            buffer.write(ByteUtils.intToBytes(this.userId, 4));
+           this.username.encode(buffer);
+           this.password.encode(buffer);
         }
     }
 
-    public String getIp() {
-        return ip;
+    public StringType getUsername() {
+        return username;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setUsername(StringType username) {
+        this.username = username;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public StringType getPassword() {
+        return password;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setPassword(StringType password) {
+        this.password = password;
     }
 }

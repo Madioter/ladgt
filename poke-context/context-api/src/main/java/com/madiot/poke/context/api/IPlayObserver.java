@@ -11,6 +11,7 @@ package com.madiot.poke.context.api;
 import com.madiot.poke.api.rule.IOneHand;
 import com.madiot.poke.api.rule.IPokeCard;
 import com.madiot.poke.codec.message.NoticeMessage;
+import com.madiot.poker.common.domain.IPlayer;
 import com.madiot.poker.common.future.CallbackFuture;
 
 import java.util.List;

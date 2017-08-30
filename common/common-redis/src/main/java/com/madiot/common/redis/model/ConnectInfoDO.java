@@ -8,6 +8,8 @@
  */
 package com.madiot.common.redis.model;
 
+import com.madiot.poker.common.domain.IPlayer;
+
 /**
  * @ClassName: ConnectInfoDO
  * @Description: TODO
@@ -16,19 +18,19 @@ package com.madiot.common.redis.model;
  */
 public class ConnectInfoDO {
 
-    private Integer playerId;
+    private IPlayer player;
 
     private Integer roundIndex;
 
     private String serverIp;
 
-    public ConnectInfoDO(Integer playerId, String serverIp) {
-        this.playerId = playerId;
+    public ConnectInfoDO(IPlayer player, String serverIp) {
+        this.player = player;
         this.serverIp = serverIp;
     }
 
     public Integer getPlayerId() {
-        return playerId;
+        return player.getId();
     }
 
     public Integer getRoundIndex() {
@@ -41,5 +43,9 @@ public class ConnectInfoDO {
 
     public void setRoundIndex(Integer roundIndex) {
         this.roundIndex = roundIndex;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
     }
 }

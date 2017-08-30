@@ -27,8 +27,6 @@ public class CurrentState implements INoticeData {
 
     private INoticeResult result;
 
-    private Integer playerId;
-
     private ListType<LadgtCard> cards = new ListType<>(LadgtCard.class);
 
     private int roundIndex;
@@ -42,34 +40,20 @@ public class CurrentState implements INoticeData {
     @Override
     public void decode(ByteBuffer buffer) {
         if (result == LadgtNoticeResultEnum.SUCCESS) {
-            this.playerId = ByteUtils.bytesToInt(buffer.read(4));
             this.cards.decode(buffer);
             this.roundIndex = ByteUtils.bytesToInt(buffer.read(4));
             this.players.decode(buffer);
-        } else if (result == LadgtNoticeResultEnum.COMMAND) {
-            this.playerId = ByteUtils.bytesToInt(buffer.read(4));
         }
     }
 
     @Override
     public void encode(ByteBuffer buffer) {
         if (result == LadgtNoticeResultEnum.SUCCESS) {
-            buffer.write(ByteUtils.intToBytes(this.playerId, 4));
             this.cards.encode(buffer);
             buffer.write(ByteUtils.intToBytes(this.roundIndex, 4));
             this.players.encode(buffer);
-        } else {
-            buffer.write(ByteUtils.intToBytes(this.playerId, 4));
         }
 
-    }
-
-    public Integer getPlayerId() {
-        return playerId;
-    }
-
-    public void setPlayerId(Integer playerId) {
-        this.playerId = playerId;
     }
 
     public ListType<LadgtCard> getCards() {

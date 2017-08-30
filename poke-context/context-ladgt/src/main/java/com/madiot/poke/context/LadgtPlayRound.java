@@ -18,7 +18,7 @@ import com.madiot.poke.codec.message.NoticeMessage;
 import com.madiot.poke.context.api.IDistributional;
 import com.madiot.poke.context.api.IPlayObserver;
 import com.madiot.poke.context.api.IPlayRound;
-import com.madiot.poke.context.api.IPlayer;
+import com.madiot.poker.common.domain.IPlayer;
 import com.madiot.poke.context.config.LadgtConfiguration;
 import com.madiot.poke.context.exception.ContextException;
 import com.madiot.poke.context.model.PlayObserverList;

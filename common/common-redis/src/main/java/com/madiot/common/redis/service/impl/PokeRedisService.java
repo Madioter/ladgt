@@ -14,15 +14,16 @@ import com.madiot.common.redis.model.ConnectInfoDO;
 import com.madiot.common.redis.model.RoundInfoDO;
 import com.madiot.common.redis.service.IPokeRedisService;
 import com.madiot.common.utils.json.JsonUtils;
+import com.madiot.common.utils.number.NumberUtil;
 import com.madiot.common.utils.string.StringUtils;
 import com.madiot.poker.common.exception.ConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ * @author Yi.Wang2
  * @ClassName: PokeRedisService
  * @Description: TODO
- * @author Yi.Wang2
  * @date 2017/8/24
  */
 @Service
@@ -61,6 +62,16 @@ public class PokeRedisService implements IPokeRedisService {
     public void saveRoundInfo(RoundInfoDO roundInfo) {
         redisCache.putInCache(RedisKeyConstant.ROUND_INFO_KEY, roundInfo.getRoundIndex(), JsonUtils.toJsonString(roundInfo),
                 RedisKeyConstant.ROUND_INFO_SECOND);
+    }
+
+    @Override
+    public Integer increaseRoundIndex() {
+        return Math.abs((int) redisCache.incrCounterCache(RedisKeyConstant.ROUND_INDEX_INCREASE, null, 1L) % RedisKeyConstant.MAX_PLAY_ROUND);
+    }
+
+    @Override
+    public Long increaseMessageId() {
+        return redisCache.incrCounterCache(RedisKeyConstant.MESSAGE_INDEX_INCREASE, null, 1L);
     }
 
 

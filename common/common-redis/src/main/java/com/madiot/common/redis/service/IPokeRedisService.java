@@ -26,4 +26,10 @@ public interface IPokeRedisService {
     RoundInfoDO getRoundInfo(Integer roundIndex);
 
     void saveRoundInfo(RoundInfoDO roundInfo);
+
+    Integer increaseRoundIndex();
+
+    Long increaseMessageId();
+
+
 }

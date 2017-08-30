@@ -10,7 +10,7 @@ import com.madiot.poke.server.base.IProcessExecute;
  */
 public class NoResultExecute implements IProcessExecute<NoticeMessage> {
     @Override
-    public byte[] execute(NoticeMessage message, IPokeRedisService redisService, IMessageSendService messageSendService) {
+    public byte[] execute(NoticeMessage message) {
         return new byte[0];
     }
 }

@@ -8,7 +8,7 @@
  */
 package com.madiot.poke.context.model;
 
-import com.madiot.poke.context.api.IPlayer;
+import com.madiot.poker.common.domain.IPlayer;
 
 /**
  * @ClassName: PlayScore

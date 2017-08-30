@@ -8,5 +8,5 @@ import com.madiot.poke.dubbo.api.connect.IMessageSendService;
  */
 public interface IProcessExecute<T> {
 
-    byte[] execute(T message, IPokeRedisService redisService, IMessageSendService messageSendService);
+    byte[] execute(T message);
 }

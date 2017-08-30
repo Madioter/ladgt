@@ -6,7 +6,7 @@
  * @date 2017/8/21
  * @version
  */
-package com.madiot.poke.context.api;
+package com.madiot.poker.common.domain;
 
 /**
  * @ClassName: IPlayer

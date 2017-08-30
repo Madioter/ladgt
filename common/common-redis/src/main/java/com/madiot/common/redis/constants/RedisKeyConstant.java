@@ -29,4 +29,10 @@ public class RedisKeyConstant {
      * 连接信息的最长有效期
      */
     public static final int ROUND_INFO_SECOND = 10 * 60;
+
+    public static final String ROUND_INDEX_INCREASE = "round_index";
+
+    public static final String MESSAGE_INDEX_INCREASE = "message_index";
+
+    public static final int MAX_PLAY_ROUND = 1000;
 }

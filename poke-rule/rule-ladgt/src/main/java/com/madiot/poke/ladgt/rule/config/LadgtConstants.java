@@ -19,4 +19,6 @@ public class LadgtConstants {
     public static final int PLAYER_CARDS = 31;
 
     public static final int MAX_CARDS = 54 * 3;
+
+    public static final int PLAYER_NUMBER = 5;
 }

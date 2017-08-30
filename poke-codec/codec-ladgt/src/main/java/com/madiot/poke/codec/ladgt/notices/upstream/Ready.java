@@ -26,7 +26,7 @@ public class Ready implements INoticeData {
 
     private INoticeResult result;
 
-    private Integer deskIndex;
+    private Integer roundIndex;
 
     private ListType<LadgtPlayer> playerList = new ListType<>(LadgtPlayer.class);
 
@@ -37,7 +37,7 @@ public class Ready implements INoticeData {
     @Override
     public void decode(ByteBuffer buffer) {
         if (result == LadgtNoticeResultEnum.SUCCESS) {
-            this.deskIndex = ByteUtils.bytesToInt(buffer.read(4));
+            this.roundIndex = ByteUtils.bytesToInt(buffer.read(4));
             this.playerList.decode(buffer);
         }
     }
@@ -45,17 +45,17 @@ public class Ready implements INoticeData {
     @Override
     public void encode(ByteBuffer buffer) {
         if (result == LadgtNoticeResultEnum.SUCCESS) {
-            buffer.write(ByteUtils.intToBytes(this.deskIndex, 4));
+            buffer.write(ByteUtils.intToBytes(this.roundIndex, 4));
             this.playerList.encode(buffer);
         }
     }
 
-    public Integer getDeskIndex() {
-        return deskIndex;
+    public Integer getRoundIndex() {
+        return roundIndex;
     }
 
-    public void setDeskIndex(Integer deskIndex) {
-        this.deskIndex = deskIndex;
+    public void setRoundIndex(Integer roundIndex) {
+        this.roundIndex = roundIndex;
     }
 
     public ListType<LadgtPlayer> getPlayerList() {
